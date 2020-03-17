@@ -1,0 +1,19 @@
+.jumbotron-fluid {
+    /* background-image: url(https://image.freepik.com/free-vector/abstract-summer-sunny-day-clouds-weather-background_38782-1207.jpg); */
+    /* background-repeat: no-repeat; */
+    background-size: cover;
+    border-style: solid;
+}
+
+body {
+    background-color: honeydew;
+}
+
+.location-title {
+    text-align: center;
+    color: red;
+}
+
+h1 {
+    text-align: center;
+}
