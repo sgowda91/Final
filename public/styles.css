@@ -1,14 +1,26 @@
+.jumbotron-fluid {
+    opacity: 1;
+    background-color: beige;
+    border-style: solid;
+    text-align: center;
+}
+
+.table {
+    background-color: beige;
+    border-style: solid;
+}
 
 .location-title {
     text-align: center;
-    color: red;
+    color: black;
 }
 
 h2 {
     text-align: center;
-    color: red;
+    color: black;
     font-size: 32px;
 }
 body {
     background-color: white;
+    background-image: url("https://www.telegraph.co.uk/content/dam/Travel/2019/October/maps.jpg");
 }

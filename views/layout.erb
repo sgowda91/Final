@@ -21,8 +21,8 @@
     <title>He@tM@P</title>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">
-            <span style="font-size: 32px; color: red;">
-                <i class="fas fa-bolt"></i>
+            <span style="font-size: 32px; color: black;">
+                <i class="fas fa-globe-americas"></i>
             </span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +43,9 @@
                     <li class="nav-item">
                         <a href="/logout" class="nav-link">Logout</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="/search/saved" class="nav-link">Saved Searches</a>
+                    </li>
                 <% else %>
                     <li class="nav-item">
                         <a class="nav-link" href="/users/new">Sign Up</a>
@@ -53,7 +56,7 @@
                 <% end %>
             </ul>
             <form class="form-inline my-2 my-lg-0" action = "/search/city">
-            <input class="form-control mr-sm-2" type="text" name="q" placeholder="Enter City Here" aria-label="Search">
+            <input class="form-control mr-sm-2" type="text" name="p" placeholder="Enter City Here" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>

@@ -1,0 +1,18 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Location</th>
+      <th scope="col">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for searches in @search %>
+        <tr>
+        <th scope="row"><%= searches[:id] %></th>
+        <td><%= searches[:location] %></td>
+        <td><%= searches[:time] %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

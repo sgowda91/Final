@@ -19,6 +19,9 @@ events_table = DB.from(:events)
 users_table = DB.from(:users)
 searches_table = DB.from(:searches)
 
+account_sid = "ACb012c59ad20c477e963501e9e142e254"
+auth_token = "6aa0234c206c7f9ba93b41709e1f95c0"
+
 before do
     @current_user = users_table.where(id: session["user_id"]).to_a[0]
 end
@@ -45,7 +48,6 @@ post "/users/create" do
             email: params["email"],
             password: BCrypt::Password.create(params["password"])
         )
-        
         redirect "/logins/new"
     end
 end
@@ -82,20 +84,35 @@ get "/logout" do
 end
 
 get "/search/city" do
-    results = Geocoder.search(params["q"])
+    puts "params: #{params}"
+
+    results = Geocoder.search(params["p"])
     @lat_long = results.first.coordinates
-    @location = params["q"]
+    @location = params["p"]
+    puts params["p"]
 
     view "city_search"
 end
 
+get "/search/saved" do
+    @search = searches_table.where(user_id: session["user_id"]).to_a
+
+    view "search_saved"
+end
+
 post "/search/save" do
+    puts "params: #{params}"
+    time = Time.now
+
     if session["user_id"]
         searches_table.insert(
             user_id: session["user_id"],
-            location: "location"
+            location: params["location"],
+            time: time
         )
-        view "test"
+        @search = TRUE
+        @location = params["location"]
+        view "city_search"
     else
         view "error"
     end

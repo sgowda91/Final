@@ -23,7 +23,7 @@ DB.create_table! :searches do
   primary_key :id
   String :user_id
   String :location
-  String :email
+  String :time
 end
 
 # Insert initial (seed) data
