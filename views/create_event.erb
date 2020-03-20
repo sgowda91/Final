@@ -1,0 +1,17 @@
+<h1>Submit event for <%= @location %>!</h1>
+<form action="/event/create" method="post">
+  <div class="form-group">
+    <label>Event Name</label>
+    <input type="text" class="form-control" placeholder="Enter Name Here" name="name">
+  </div>
+  <div class="form-group">
+    <label>Event Date</label>
+    <input type="date" class="form-control" placeholder="3-22-20" name="date">
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <input type="text" class="form-control" placeholder="Enter Description" name="description">
+  </div>
+  <input type="hidden" name="location" value="<%= @location %>"">
+  <button type="submit" class="btn btn-primary">Sign Up</button>
+</form>

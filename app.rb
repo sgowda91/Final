@@ -19,9 +19,6 @@ events_table = DB.from(:events)
 users_table = DB.from(:users)
 searches_table = DB.from(:searches)
 
-account_sid = "ACb012c59ad20c477e963501e9e142e254"
-auth_token = "6aa0234c206c7f9ba93b41709e1f95c0"
-
 before do
     @current_user = users_table.where(id: session["user_id"]).to_a[0]
 end
@@ -48,6 +45,18 @@ post "/users/create" do
             email: params["email"],
             password: BCrypt::Password.create(params["password"])
         )
+        
+            account_sid = "ACb012c59ad20c477e963501e9e142e254"
+            auth_token = "6aa0234c206c7f9ba93b41709e1f95c0"
+            client = Twilio::REST::Client.new("ACb012c59ad20c477e963501e9e142e254", "6aa0234c206c7f9ba93b41709e1f95c0")
+            # send the SMS from your trial Twilio number to your verified non-Twilio number
+            
+            client.messages.create(
+            from: "+12068296075", 
+            to: "+2487030094",
+            body: "One new user has created an account on He@tm@ps!"
+            )
+
         redirect "/logins/new"
     end
 end
@@ -87,9 +96,11 @@ get "/search/city" do
     puts "params: #{params}"
 
     results = Geocoder.search(params["p"])
-    @lat_long = results.first.coordinates
+    @lat = results.first.coordinates[0]
+    @long = results.first.coordinates[1]
+    @lat_long = "#{@lat},#{@long}"
     @location = params["p"]
-    puts params["p"]
+    @events = events_table.where(location: params["p"]).to_a
 
     view "city_search"
 end
@@ -112,8 +123,32 @@ post "/search/save" do
         )
         @search = TRUE
         @location = params["location"]
+        results = Geocoder.search(params["location"])
+        @lat = results.first.coordinates[0]
+        @long = results.first.coordinates[1]
+        @lat_long = "#{@lat},#{@long}"
+        @events = events_table.where(location: params["location"]).to_a
         view "city_search"
     else
         view "error"
     end
+end
+
+get "/event/new" do
+    @location = params["location"]
+    view "create_event"
+end
+
+post "/event/create" do
+    @user = users_table.where(id: session["user_id"]).to_a[0]
+
+    events_table.insert(
+        title: params["name"],
+        date: params["date"],
+        description: params["description"],
+        user_id: session["user_id"],
+        user_name: @user[:name],
+        location: params["location"]
+    )
+    view "create_event_done"
 end

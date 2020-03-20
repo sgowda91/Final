@@ -5,13 +5,16 @@ DB = Sequel.connect(connection_string)                                          
 #######################################################################################
 
 # Database schema - this should reflect your domain model
-# DB.create_table! :events do
-#   primary_key :id
-#   String :title
-#   String :description, text: true
-#   String :date
-#   String :location
-# end
+DB.create_table! :events do
+  primary_key :id
+  foreign_key :user_id
+  String :title
+  String :description, text: true
+  String :date
+  String :location
+  String :user_name
+end
+
 DB.create_table! :users do
   primary_key :id
   String :name
