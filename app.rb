@@ -212,18 +212,19 @@ get "/review/new" do
 end
 
 post "/review/create" do
-    review = reviews_table.where(location: session["location"], user_id: @current_user[:id]).to_a
-        if review != nil
-            view "create_review_error"
-        else
-            reviews_table.insert(
-                rating: params["rating"],
-                favorite: params["favorite"],
-                worst: params["worst"],
-                user_id: @current_user[:id],
-                user_name: @current_user[:name],
-                location: session["location"]
-            )
-            redirect "/search/city" 
-         end
+    review = reviews_table.where(location: session["location"], user_id: @current_user[:id]).to_a[0]
+
+    if review
+        view "create_review_error"
+    else
+        reviews_table.insert(
+            rating: params["rating"],
+            favorite: params["favorite"],
+            worst: params["worst"],
+            user_id: @current_user[:id],
+            user_name: @current_user[:name],
+            location: session["location"]
+        )
+        redirect "/search/city" 
+        end
 end
