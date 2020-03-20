@@ -18,11 +18,11 @@ after { puts; }                                                                 
 events_table = DB.from(:events)
 users_table = DB.from(:users)
 searches_table = DB.from(:searches)
+reviews_table = DB.from(:reviews)
 
-account_sid = "AC9858c376b753a84696c9a77869dda3e3"
-auth_token = "67ba2980ab6fca061075306dfeaf4556"
-
-client = Twilio::REST::Client.new("AC9858c376b753a84696c9a77869dda3e3", "67ba2980ab6fca061075306dfeaf4556")
+account_sid = ENV["TWILIO_ACCOUNT_SID"]
+auth_token = ENV["TWILIO_AUTH_TOKEN"]
+client = Twilio::REST::Client.new(account_sid, auth_token)
 
 before do
     @current_user = users_table.where(id: session["user_id"]).to_a[0]
@@ -50,14 +50,12 @@ post "/users/create" do
             email: params["email"],
             password: BCrypt::Password.create(params["password"])
         )
-            # send the SMS from your trial Twilio number to your verified non-Twilio number
-            
+            # This will text my number, so be kind :). 
             client.messages.create(
             from: "+12057547035", 
             to: "+12487030094",
-            body: "One new user has created an account on He@tm@ps!"
+            body: "One new user has created an account on He@tm@p!"
             )
-
         redirect "/logins/new"
     end
 end
@@ -77,7 +75,6 @@ post "/logins/create" do
         if BCrypt::Password.new(@user[:password]) == params["password"]
             # set encrypted cookie for logged in user
             session["user_id"] = @user[:id]
-            session["user_email"] = @user[:email]
             redirect "/"
         else
             view "create_login_failed"
@@ -90,19 +87,28 @@ end
 get "/logout" do
     # remove encrypted cookie for logged out user
     session["user_id"] = nil
+    session["location"] = nil
     redirect "/logins/new"
+end
+
+get "/search/city/input" do
+    puts "params: #{params}"
+    session["location"] = params["p"]
+
+    redirect "/search/city"
 end
 
 get "/search/city" do
     puts "params: #{params}"
 
-    results = Geocoder.search(params["p"])
+    results = Geocoder.search(session["location"])
+
     @lat = results.first.coordinates[0]
     @long = results.first.coordinates[1]
     @lat_long = "#{@lat},#{@long}"
-    @location = params["p"]
-    @events = events_table.where(location: params["p"]).to_a
-
+    @location = session["location"]
+    @events = events_table.where(location: session["location"]).to_a
+    @reviews = reviews_table.where(location: session["location"]).to_a
     view "city_search"
 end
 
@@ -116,12 +122,14 @@ post "/search/save" do
     puts "params: #{params}"
     time = Time.now
 
-    if session["user_id"]
+    if @current_user
         searches_table.insert(
-            user_id: session["user_id"],
+            user_id: @current_user[:id],
             location: params["location"],
             time: time
         )
+    #I only included all this mess below, instead of a redirect, 
+    #because I don't know how to pass the @search variable through the redirect
         @search = TRUE
         @location = params["location"]
         results = Geocoder.search(params["location"])
@@ -129,17 +137,21 @@ post "/search/save" do
         @long = results.first.coordinates[1]
         @lat_long = "#{@lat},#{@long}"
         @events = events_table.where(location: params["location"]).to_a
+        @reviews = reviews_table.where(location: params["p"]).to_a
         view "city_search"
     else
         view "error"
     end
 end
 
+#displays the create event form
 get "/event/new" do
     @location = params["location"]
     view "create_event"
 end
 
+
+#creates the event and signals event is created
 post "/event/create" do
     @user = users_table.where(id: session["user_id"]).to_a[0]
 
@@ -147,9 +159,71 @@ post "/event/create" do
         name: params["name"],
         date: params["date"],
         description: params["description"],
-        user_id: session["user_id"],
+        user_id: @user[:id],
         user_name: @user[:name],
         location: params["location"]
     )
-    view "create_event_done"
+    redirect "/search/city"
+end
+# display the event form (aka "edit")
+get "/event/:id/edit" do
+    puts "params: #{params}"
+    @event = events_table.where(id: params["id"]).to_a[0]
+
+    view "edit_event"
+end
+
+#update the event for new name, date, description
+post "/event/:id/update" do
+    puts "params: #{params}"
+
+    # find the event to update
+    @event = events_table.where(id: params["id"]).to_a[0]
+
+    if @current_user && @current_user[:id] == @event[:user_id]
+        events_table.where(id: params["id"]).update(
+            name: params["name"],
+            date: params["date"],
+            description: params["description"]
+        )
+        redirect "/search/city"
+    else
+        view "error"
+    end
+end
+
+# delete the event (aka "destroy")
+get "/event/:id/destroy" do
+    puts "params: #{params}"
+
+    @event = events_table.where(id: params["id"]).to_a[0]
+
+    if @current_user && @current_user[:id] == @event[:user_id]
+        events_table.where(id: params["id"]).delete
+        redirect "/search/city"
+    else
+        view "error"
+    end
+end
+
+get "/review/new" do
+    @location = session["location"]
+    view "create_review"
+end
+
+post "/review/create" do
+    review = reviews_table.where(location: session["location"], user_id: @current_user[:id]).to_a
+        if review != nil
+            view "create_review_error"
+        else
+            reviews_table.insert(
+                rating: params["rating"],
+                favorite: params["favorite"],
+                worst: params["worst"],
+                user_id: @current_user[:id],
+                user_name: @current_user[:name],
+                location: session["location"]
+            )
+            redirect "/search/city" 
+         end
 end

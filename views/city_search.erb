@@ -6,7 +6,7 @@
     <% else %>
       <% if @current_user %>
         <form action="/search/save" method="post">
-        <input type="hidden" name="location" value="<%= @location %>"">
+        <input type="hidden" name="location" value="<%= @location %>">
         <button type="submit" class="btn btn-link">Save Search!</button>
         </form>
        <% end %> 
@@ -28,34 +28,73 @@
     <div class="col"></div>
     <div class="w-100"></div>
     <div class="col">
- <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Event Name</th>
-      <th scope="col">Date</th>
-      <th scope="col">User</th>
-      <th scope="col">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% for event in @events %>
-        <tr>
-            <td><%= event[:name] %></td>
-            <td><%= event[:date] %></td>
-            <td><%= event[:user_name] %></td>
-            <td><%= event[:description] %></td>
-        </tr>
-    <% end %>
-  </tbody>
-</table>
-        <% if @current_user %>
-            <form action="/event/new" method="get">
-                <input type="hidden" name="location" value="<%= @location %>"">
-                <button type="submit" class="btn btn-primary">Submit Event</button>
-            </form>
-        <% else %>
-            <a href="/logins/new" class="btn btn-danger">Please sign in to submit event</a>
-        <% end %>
+        <% if @current_user %>
+            <form action="/event/new" method="get">
+                <input type="hidden" name="location" value="<%= @location %>">
+                <button type="submit" class="btn btn-primary">Submit Event!</button>
+            </form>
+        <% else %>
+            <a class="btn btn-danger" href="/logins/new" role="button">Please sign in to submit event</a>
+       <% end %>
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">User</th>
+            <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for event in @events %>
+                <tr>
+                    <td>
+                        <%= event[:name] %>
+                        <small>
+                            <% if @current_user && @current_user[:id] == event[:user_id] %>
+                                (<a href="/event/<%= event[:id] %>/edit">edit</a> | <a href="/event/<%= event[:id] %>/destroy">delete</a>)
+                            <% end %>
+                        </small>
+                    </td>
+                    <td><%= event[:date] %></td>
+                    <td><%= event[:user_name] %></td>
+                    <td><%= event[:description] %></td>
+                </tr>
+            <% end %>
+        </tbody>
+        </table>
+            </div>
+                <div class="col">
+                <% if @current_user %>
+                    <form action="/review/new" method="get">
+                        <button type="submit" class="btn btn-primary">Submit Review!</button>
+                    </form>
+                <% else %>
+                    <a class="btn btn-danger" href="/logins/new" role="button">Please sign in to submit review</a>
+            <% end %>
+        <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Favorite</th>
+            <th scope="col">Least Favorite</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for review in @reviews %>
+                <tr>
+                    <td>
+                        <%= review[:user_name] %>
+                    </td>
+                    <td><%= review[:rating] %></td>
+                    <td><%= review[:favorite] %></td>
+                    <td><%= review[:worst] %></td>
+                </tr>
+            <% end %>
+        </tbody>
+        </table>
     </div>
   </div>
 </div>
+

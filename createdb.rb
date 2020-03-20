@@ -29,25 +29,41 @@ DB.create_table! :searches do
   String :time
 end
 
+DB.create_table! :reviews do
+  primary_key :id
+  foreign_key :user_id
+  String :location
+  String :user_name
+  String :favorite
+  String :worst
+  Integer :rating
+end
+
 # Insert initial (seed) data
 users_table = DB.from(:users)
 events_table = DB.from(:events)
+reviews_table = DB.from(:reviews)
 
 events_table.insert(id: 1,
                     name: "Spring Awakening", 
                     description: "Spring Awakening Music Festival is an annual electronic dance music festival held in Chicago.",
                     date: "03/07/2020",
-                    user_name: "Ben"
+                    user_name: "Ben",
                     location: "Chicago")
 
 events_table.insert(id: 2,
-
                     name: "Electric Zoo", 
                     description: "Electric Zoo is an annual electronic music festival held over Labor Day weekend in New York City on Randall's Island.",
                     date: "09/04/2020",
-                    user_name: "Ben"
+                    user_name: "Ben",
                     location: "New York City")
 
+reviews_table.insert(id: 1,
+                    favorite: "They have top notch students who I love teaching!",
+                    worst: "Sometimes, public transportation can be slow!",
+                    user_name: "Ben",
+                    location: "Chicago",
+                    rating: "10")
 # events_table.insert(title: "Kaleapolooza", 
 #                     description: "If you're into nutrition and vitamins and stuff, this is the event for you.",
 #                     date: "July 4",
