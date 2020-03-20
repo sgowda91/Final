@@ -132,7 +132,7 @@ post "/search/save" do
         )
     #I only included all this mess below, instead of a redirect, 
     #because I don't know how to pass the @search variable through the redirect
-        @search = TRUE
+        @search = true
         @location = params["location"]
         results = Geocoder.search(params["location"])
         @lat = results.first.coordinates[0]
