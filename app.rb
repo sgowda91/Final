@@ -122,6 +122,7 @@ post "/search/save" do
     puts "params: #{params}"
     stamp = Time.now
     date = stamp.strftime("%m/%d/%Y %k:%M:%S")
+    puts "Date format: #{date.class}"
 
     if @current_user
         searches_table.insert(
