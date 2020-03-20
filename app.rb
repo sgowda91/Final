@@ -19,6 +19,11 @@ events_table = DB.from(:events)
 users_table = DB.from(:users)
 searches_table = DB.from(:searches)
 
+account_sid = "AC9858c376b753a84696c9a77869dda3e3"
+auth_token = "67ba2980ab6fca061075306dfeaf4556"
+
+client = Twilio::REST::Client.new("AC9858c376b753a84696c9a77869dda3e3", "67ba2980ab6fca061075306dfeaf4556")
+
 before do
     @current_user = users_table.where(id: session["user_id"]).to_a[0]
 end
@@ -45,14 +50,10 @@ post "/users/create" do
             email: params["email"],
             password: BCrypt::Password.create(params["password"])
         )
-        
-            account_sid = "ACb012c59ad20c477e963501e9e142e254"
-            auth_token = "6aa0234c206c7f9ba93b41709e1f95c0"
-            client = Twilio::REST::Client.new("ACb012c59ad20c477e963501e9e142e254", "6aa0234c206c7f9ba93b41709e1f95c0")
             # send the SMS from your trial Twilio number to your verified non-Twilio number
             
             client.messages.create(
-            from: "+12068296075", 
+            from: "+12057547035", 
             to: "+2487030094",
             body: "One new user has created an account on He@tm@ps!"
             )
@@ -143,7 +144,7 @@ post "/event/create" do
     @user = users_table.where(id: session["user_id"]).to_a[0]
 
     events_table.insert(
-        title: params["name"],
+        name: params["name"],
         date: params["date"],
         description: params["description"],
         user_id: session["user_id"],

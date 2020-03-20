@@ -8,7 +8,7 @@ DB = Sequel.connect(connection_string)                                          
 DB.create_table! :events do
   primary_key :id
   foreign_key :user_id
-  String :title
+  String :name
   String :description, text: true
   String :date
   String :location
@@ -30,12 +30,23 @@ DB.create_table! :searches do
 end
 
 # Insert initial (seed) data
+users_table = DB.from(:events)
 events_table = DB.from(:events)
 
-# events_table.insert(title: "Bacon Burger Taco Fest", 
-#                     description: "Here we go again bacon burger taco fans, another Bacon Burger Taco Fest is here!",
-#                     date: "June 21",
-#                     location: "Kellogg Global Hub")
+users_table.insert(id: 1, 
+                    name: "Ben",
+                    email: "Ben@Heisawesome.com",
+                    password: "getpost")
+
+events_table.insert(name: "Spring Awakening", 
+                    description: "Spring Awakening Music Festival is an annual electronic dance music festival held in Chicago.",
+                    date: "03/07/2020",
+                    location: "Chicago")
+
+events_table.insert(name: "Bacon Burger Taco Fest", 
+                    description: "Electric Zoo is an annual electronic music festival held over Labor Day weekend in New York City on Randall's Island.",
+                    date: "09/04/2020",
+                    location: "New York City")
 
 # events_table.insert(title: "Kaleapolooza", 
 #                     description: "If you're into nutrition and vitamins and stuff, this is the event for you.",
