@@ -54,7 +54,7 @@ post "/users/create" do
             
             client.messages.create(
             from: "+12057547035", 
-            to: "+2487030094",
+            to: "+12487030094",
             body: "One new user has created an account on He@tm@ps!"
             )
 

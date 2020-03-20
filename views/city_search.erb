@@ -40,7 +40,7 @@
   <tbody>
     <% for event in @events %>
         <tr>
-            <td><%= event[:title] %></td>
+            <td><%= event[:name] %></td>
             <td><%= event[:date] %></td>
             <td><%= event[:user_name] %></td>
             <td><%= event[:description] %></td>
@@ -48,6 +48,14 @@
     <% end %>
   </tbody>
 </table>
+        <% if @current_user %>
+            <form action="/event/new" method="get">
+                <input type="hidden" name="location" value="<%= @location %>"">
+                <button type="submit" class="btn btn-primary">Submit Event</button>
+            </form>
+        <% else %>
+            <a href="/logins/new" class="btn btn-danger">Please sign in to submit event</a>
+        <% end %>
     </div>
   </div>
 </div>

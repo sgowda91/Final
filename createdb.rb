@@ -30,22 +30,22 @@ DB.create_table! :searches do
 end
 
 # Insert initial (seed) data
-users_table = DB.from(:events)
+users_table = DB.from(:users)
 events_table = DB.from(:events)
 
-users_table.insert(id: 1, 
-                    name: "Ben",
-                    email: "Ben@Heisawesome.com",
-                    password: "getpost")
-
-events_table.insert(name: "Spring Awakening", 
+events_table.insert(id: 1,
+                    name: "Spring Awakening", 
                     description: "Spring Awakening Music Festival is an annual electronic dance music festival held in Chicago.",
                     date: "03/07/2020",
+                    user_name: "Ben"
                     location: "Chicago")
 
-events_table.insert(name: "Bacon Burger Taco Fest", 
+events_table.insert(id: 2,
+
+                    name: "Electric Zoo", 
                     description: "Electric Zoo is an annual electronic music festival held over Labor Day weekend in New York City on Randall's Island.",
                     date: "09/04/2020",
+                    user_name: "Ben"
                     location: "New York City")
 
 # events_table.insert(title: "Kaleapolooza", 
