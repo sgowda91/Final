@@ -120,13 +120,14 @@ end
 
 post "/search/save" do
     puts "params: #{params}"
-    time = Time.now
+    stamp = Time.now
+    date = stamp.strftime("%m/%d/%Y %k:%M:%S")
 
     if @current_user
         searches_table.insert(
             user_id: @current_user[:id],
             location: params["location"],
-            time: time
+            time: date
         )
     #I only included all this mess below, instead of a redirect, 
     #because I don't know how to pass the @search variable through the redirect
