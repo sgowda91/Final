@@ -24,7 +24,7 @@ end
 
 DB.create_table! :searches do
   primary_key :id
-  String :user_id
+  foreign_key :user_id
   String :location
   String :time
 end

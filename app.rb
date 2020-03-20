@@ -127,7 +127,7 @@ post "/search/save" do
         searches_table.insert(
             user_id: @current_user[:id],
             location: params["location"],
-            time: params["location"]
+            time: date
         )
     #I only included all this mess below, instead of a redirect, 
     #because I don't know how to pass the @search variable through the redirect
