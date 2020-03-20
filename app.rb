@@ -28,8 +28,6 @@ before do
     @current_user = users_table.where(id: session["user_id"]).to_a[0]
 end
 
-#hi
-
 get "/" do
     view "home"
 end
