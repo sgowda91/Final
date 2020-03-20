@@ -138,7 +138,7 @@ post "/search/save" do
         @long = results.first.coordinates[1]
         @lat_long = "#{@lat},#{@long}"
         @events = events_table.where(location: params["location"]).to_a
-        @reviews = reviews_table.where(location: params["p"]).to_a
+        @reviews = reviews_table.where(location: params["location"]).to_a
         view "city_search"
     else
         view "error"
